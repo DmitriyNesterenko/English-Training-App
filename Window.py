@@ -23,9 +23,17 @@ class Window(QtGui.QMainWindow):
         self.lblTime = QtGui.QLabel('00:00', self)
         self.lblTime.move(130, 70)
 
+        self.btnStart = QtGui.QPushButton('Start', self)
+        self.btnStart.move(130, 100)
+        self.btnStart.clicked.connect(self.startTimer)
+        self.btnStart.minimumSizeHint()
+
         self.show()
 
     def loadWordsLibrary(self):
         with open('wordsLibrary.txt', 'r') as wordLibrary:
             for word in wordLibrary.readlines():
                 self.listWords.append(word)
+
+    def startTimer(self):
+        pass
