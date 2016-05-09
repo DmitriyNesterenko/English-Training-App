@@ -16,8 +16,12 @@ class Window(QtGui.QMainWindow):
 
     def home(self):
         randomWord = random.choice(self.listWords)
+
         self.lblWord = QtGui.QLabel(randomWord, self)
         self.lblWord.move(130, 50)
+
+        self.lblTime = QtGui.QLabel('00:00', self)
+        self.lblTime.move(130, 70)
 
         self.show()
 
