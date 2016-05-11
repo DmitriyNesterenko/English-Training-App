@@ -1,5 +1,5 @@
 import random, sys
-from PyQt4 import QtGui, QtCore
+from PyQt4 import QtGui
 
 class Window(QtGui.QMainWindow):
 
@@ -16,17 +16,15 @@ class Window(QtGui.QMainWindow):
         exitAction.setStatusTip('Leave from app.')
         exitAction.triggered.connect(self.closeApplication)
         self.statusBar()
-        Menu = self.menuBar()
-        appMenu = Menu.addMenu('&Application')
-        appMenu.addAction(exitAction)
+        self.Menu = self.menuBar()
+        self.appMenu = self.Menu.addMenu('&Application')
+        self.appMenu.addAction(exitAction)
 
         self.loadWordsLibrary()
         self.home()
 
     def home(self):
-        randomWord = random.choice(self.listWords)
-
-        self.lblWord = QtGui.QLabel(randomWord, self)
+        self.lblWord = QtGui.QLabel(random.choice(self.listWords), self)
         self.lblWord.move(130, 50)
 
         self.lblTime = QtGui.QLabel('00:00', self)
@@ -37,10 +35,14 @@ class Window(QtGui.QMainWindow):
         self.btnStart.clicked.connect(self.startAppTimer)
         self.btnStart.minimumSizeHint()
 
+        self.newWordAction = QtGui.QAction(QtGui.QIcon(r"C:\Users\Dmitriy\Desktop\Resouse Images\Word-icon.png"), 'Random word', self)
+        self.newWordAction.setShortcut('Ctrl+R')
+        self.newWordAction.setStatusTip('Get another word for training')
+        self.newWordAction.triggered.connect(self.getNewWord)
 
-        self.exitAction = QtGui.QAction('Random word', self)
         self.toolBar = self.addToolBar('Extraction')
-        #self.toolBar.addAction()
+        self.toolBar.addAction(self.newWordAction)
+        self.appMenu.addAction(self.newWordAction)
 
 
         self.show()
@@ -59,3 +61,6 @@ class Window(QtGui.QMainWindow):
                                             QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
         if choice == QtGui.QMessageBox.Yes:
             sys.exit()
+
+    def getNewWord(self):
+        self.lblWord.setText(random.choice(self.listWords))
