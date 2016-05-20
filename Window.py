@@ -12,25 +12,24 @@ class Window(QMainWindow):
     def __init__(self):
         try:
             super(Window, self).__init__()
-
-            exitAction = QAction('&Exit', self)
-            exitAction.setShortcut('Ctrl+Q')
-            exitAction.setStatusTip('Leave from app.')
-            exitAction.triggered.connect(self.closeApplication)
-            self.statusBar()
-            self.Menu = self.menuBar()
-            self.appMenu = self.Menu.addMenu('&Application')
-            self.appMenu.addAction(exitAction)
-
-            self.loadWordsLibrary()
-            self.setGeometry(50, 50, 320, 260)
-            self.setWindowTitle('English training app')
-            self.setWindowIcon(QIcon(r"C:\Users\Dmitriy\Desktop\Resouse Images\YNAB-icon.png"))
             self.initUI()
         except Exception as exc:
             print(exc.__str__())
 
     def initUI(self):
+        vbox = QVBoxLayout()
+
+        exitAction = QAction('&Exit', self)
+        exitAction.setShortcut('Ctrl+Q')
+        exitAction.setStatusTip('Leave from app.')
+        exitAction.triggered.connect(self.closeApplication)
+        self.statusBar()
+        self.Menu = self.menuBar()
+        self.appMenu = self.Menu.addMenu('&Application')
+        self.appMenu.addAction(exitAction)
+
+        self.loadWordsLibrary()
+
         self.lblWord = QLabel('u' + str(random.choice(self.listWords)), self)
         self.lblWord.move(130, 50)
 
@@ -42,6 +41,10 @@ class Window(QMainWindow):
         self.btnStart.clicked.connect(self.startAppTimer)
         self.btnStart.minimumSizeHint()
 
+        vbox.addWidget(self.lblWord)
+        vbox.addWidget(self.lblTime)
+        vbox.addWidget(self.btnStart)
+
         self.newWordAction = QAction(QIcon(r"C:\Users\Dmitriy\Desktop\Resouse Images\Word-icon.png"), 'Random word', self)
         self.newWordAction.setShortcut('Ctrl+R')
         self.newWordAction.setStatusTip('Get another word for training')
@@ -50,6 +53,11 @@ class Window(QMainWindow):
         self.toolBar = self.addToolBar('Extraction')
         self.toolBar.addAction(self.newWordAction)
         self.appMenu.addAction(self.newWordAction)
+
+        self.setLayout(vbox)
+        self.setGeometry(50, 50, 320, 260)
+        self.setWindowTitle('English training app')
+        self.setWindowIcon(QIcon(r"C:\Users\Dmitriy\Desktop\Resouse Images\YNAB-icon.png"))
 
         self.show()
 
@@ -64,6 +72,15 @@ class Window(QMainWindow):
                                             QMessageBox.Yes | QMessageBox.No)
         if choice == QMessageBox.Yes:
             sys.exit()
+
+    def closeEvent(self, QCloseEvent):
+        choice = QMessageBox.question(self, 'Extract',
+                                      'Do you want to exit?',
+                                      QMessageBox.Yes | QMessageBox.No)
+        if choice == QMessageBox.Yes:
+            QCloseEvent.accept()
+        else:
+            QCloseEvent.ignore()
 
     def getNewWord(self):
         self.lblWord.setText(random.choice(self.listWords))
