@@ -1,6 +1,6 @@
 from EnglishTrainingApp.Window import Window
 import sys
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 
 def run():
     app = QtGui.QApplication(sys.argv)

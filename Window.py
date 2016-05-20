@@ -1,27 +1,34 @@
+# -*- coding: utf-8 -*-
+
 import random, sys
-from PyQt4 import QtGui
+from PyQt5 import QtGui, QtCore
+from PyQt5.QtCore import QBasicTimer
 
 class Window(QtGui.QMainWindow):
 
     listWords = []
 
     def __init__(self):
-        super(Window, self).__init__()
-        self.setGeometry(50, 50, 320, 260)
-        self.setWindowTitle('English training app')
-        self.setWindowIcon(QtGui.QIcon(r"C:\Users\Dmitriy\Desktop\Resouse Images\YNAB-icon.png"))
+        try:
+            super(Window, self).__init__()
+            self.setGeometry(50, 50, 320, 260)
+            self.setWindowTitle('English training app')
+            self.setWindowIcon(QtGui.QIcon(r"C:\Users\Dmitriy\Desktop\Resouse Images\YNAB-icon.png"))
 
-        exitAction = QtGui.QAction('&Exit', self)
-        exitAction.setShortcut('Ctrl+Q')
-        exitAction.setStatusTip('Leave from app.')
-        exitAction.triggered.connect(self.closeApplication)
-        self.statusBar()
-        self.Menu = self.menuBar()
-        self.appMenu = self.Menu.addMenu('&Application')
-        self.appMenu.addAction(exitAction)
+            exitAction = QtGui.QAction('&Exit', self)
+            exitAction.setShortcut('Ctrl+Q')
+            exitAction.setStatusTip('Leave from app.')
+            exitAction.triggered.connect(self.closeApplication)
+            self.statusBar()
+            self.Menu = self.menuBar()
+            self.appMenu = self.Menu.addMenu('&Application')
+            self.appMenu.addAction(exitAction)
 
-        self.loadWordsLibrary()
-        self.home()
+            self.loadWordsLibrary()
+            self.home()
+        except Exception as exc:
+            mes = QtGui.QMessageBox(exc.__str__())
+            mes.show()
 
     def home(self):
         self.lblWord = QtGui.QLabel(random.choice(self.listWords), self)
@@ -45,15 +52,13 @@ class Window(QtGui.QMainWindow):
         self.appMenu.addAction(self.newWordAction)
 
 
+
         self.show()
 
     def loadWordsLibrary(self):
         with open('wordsLibrary.txt', 'r') as wordLibrary:
             for word in wordLibrary.readlines():
                 self.listWords.append(word)
-
-    def startAppTimer(self):
-        pass
 
     def closeApplication(self):
         choice = QtGui.QMessageBox.question(self, 'Extract',
@@ -64,3 +69,5 @@ class Window(QtGui.QMainWindow):
 
     def getNewWord(self):
         self.lblWord.setText(random.choice(self.listWords))
+
+    
