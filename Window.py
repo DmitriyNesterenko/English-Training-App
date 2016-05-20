@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import random, sys
-from PyQt5.QtWidgets import QMainWindow, QMessageBox, QLabel, QPushButton, QAction
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QLabel, QPushButton, QAction, QVBoxLayout, QHBoxLayout
 from PyQt5.QtCore import QBasicTimer
 from PyQt5.QtGui import QIcon
 
@@ -26,11 +26,11 @@ class Window(QMainWindow):
             self.setGeometry(50, 50, 320, 260)
             self.setWindowTitle('English training app')
             self.setWindowIcon(QIcon(r"C:\Users\Dmitriy\Desktop\Resouse Images\YNAB-icon.png"))
-            self.home()
+            self.initUI()
         except Exception as exc:
             print(exc.__str__())
 
-    def home(self):
+    def initUI(self):
         self.lblWord = QLabel('u' + str(random.choice(self.listWords)), self)
         self.lblWord.move(130, 50)
 
