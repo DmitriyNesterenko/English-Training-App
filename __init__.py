@@ -1,10 +1,11 @@
 from EnglishTrainingApp.Window import Window
 import sys
-from PyQt5 import QtGui, QtCore
+from PyQt5.QtWidgets import QApplication
 
 def run():
-    app = QtGui.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     GUI = Window()
     sys.exit(app.exec())
 
-run()
+if __name__ == '__main__':
+    run()
