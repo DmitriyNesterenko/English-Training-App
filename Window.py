@@ -41,6 +41,7 @@ class Window(QMainWindow):
         self.btnStart.clicked.connect(self.startAppTimer)
         self.btnStart.minimumSizeHint()
 
+        vbox.addStretch(1)
         vbox.addWidget(self.lblWord)
         vbox.addWidget(self.lblTime)
         vbox.addWidget(self.btnStart)
