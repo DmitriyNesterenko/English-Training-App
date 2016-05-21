@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import random, sys
-from PyQt5.QtWidgets import QMainWindow, QMessageBox, QLabel, QPushButton, QAction, QVBoxLayout, QHBoxLayout
+from PyQt5.QtWidgets import (QMainWindow, QMessageBox, QLabel, QPushButton,
+                             QAction, QVBoxLayout, QProgressBar)
 from PyQt5.QtCore import QBasicTimer
 from PyQt5.QtGui import QIcon
 
@@ -17,8 +18,6 @@ class Window(QMainWindow):
             print(exc.__str__())
 
     def initUI(self):
-        vbox = QVBoxLayout()
-
         exitAction = QAction('&Exit', self)
         exitAction.setShortcut('Ctrl+Q')
         exitAction.setStatusTip('Leave from app.')
@@ -30,21 +29,18 @@ class Window(QMainWindow):
 
         self.loadWordsLibrary()
 
-        self.lblWord = QLabel('u' + str(random.choice(self.listWords)), self)
+        self.lblWord = QLabel('', self)
         self.lblWord.move(130, 50)
+        self.getNewWord()
 
-        self.lblTime = QLabel('00:00', self)
-        self.lblTime.move(130, 70)
+        self.pbar = QProgressBar(self)
+        self.pbar.setGeometry(130, 70, 200, 25)
+        self.pbar.setMaximum(500)
 
         self.btnStart = QPushButton('Start', self)
         self.btnStart.move(130, 100)
         self.btnStart.clicked.connect(self.startAppTimer)
         self.btnStart.minimumSizeHint()
-
-        vbox.addStretch(1)
-        vbox.addWidget(self.lblWord)
-        vbox.addWidget(self.lblTime)
-        vbox.addWidget(self.btnStart)
 
         self.newWordAction = QAction(QIcon(r"C:\Users\Dmitriy\Desktop\Resouse Images\Word-icon.png"), 'Random word', self)
         self.newWordAction.setShortcut('Ctrl+R')
@@ -55,7 +51,19 @@ class Window(QMainWindow):
         self.toolBar.addAction(self.newWordAction)
         self.appMenu.addAction(self.newWordAction)
 
+        # Set up the layout of our app.
+        vbox = QVBoxLayout()
+        vbox.addWidget(self.lblWord)
+        #vbox.addWidget(self.lblTime)
+        vbox.addWidget(self.pbar)
+        vbox.addWidget(self.btnStart)
         self.setLayout(vbox)
+
+        # Set up timer.
+        self.timer = QBasicTimer()
+        self.time = 500
+
+        # Set up window.
         self.setGeometry(50, 50, 320, 260)
         self.setWindowTitle('English training app')
         self.setWindowIcon(QIcon(r"C:\Users\Dmitriy\Desktop\Resouse Images\YNAB-icon.png"))
@@ -84,7 +92,30 @@ class Window(QMainWindow):
             QCloseEvent.ignore()
 
     def getNewWord(self):
-        self.lblWord.setText(random.choice(self.listWords))
+        newWord = random.choice(self.listWords)
+        self.lblWord.setText(newWord)
+
+    def timerEvent(self, e):
+        try:
+            if self.time <= 0:
+                self.timer.stop()
+                self.lblTime.setText('00:00')
+                return
+
+            self.time -= 1
+            self.pbar.setValue(self.time)
+        except Exception as exc:
+            print(exc.__str__())
+            print(exc.__traceback__)
 
     def startAppTimer(self):
-        pass
+        try:
+            if self.timer.isActive():
+                self.timer.stop()
+                self.btnStart.setText('Start')
+            else:
+                self.timer.start(300, self)
+                self.btnStart.setText('Stop')
+        except Exception as exc:
+            print(exc.__str__())
+            print(exc.__traceback__)
