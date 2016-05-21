@@ -2,12 +2,16 @@
 
 import random, sys
 from PyQt5.QtWidgets import (QMainWindow, QMessageBox, QLabel, QPushButton,
-                             QAction, QVBoxLayout, QProgressBar)
-from PyQt5.QtCore import QBasicTimer
+                             QAction, QVBoxLayout, QProgressBar, QApplication,
+                             QStyleFactory, QComboBox, qApp)
+from PyQt5.QtCore import QBasicTimer, Qt
 from PyQt5.QtGui import QIcon
+
+styles = ["Plastique","Cleanlooks","CDE","Motif","GTK+"]
 
 class Window(QMainWindow):
 
+    global styles
     listWords = []
 
     def __init__(self):
@@ -18,6 +22,11 @@ class Window(QMainWindow):
             print(exc.__str__())
 
     def initUI(self):
+        self.comboBox = QComboBox(self)
+        self.comboBox.addItems(styles)
+        self.comboBox.move(20, 60)
+        self.comboBox.activated[str].connect(self.styleChoice)
+
         exitAction = QAction('&Exit', self)
         exitAction.setShortcut('Ctrl+Q')
         exitAction.setStatusTip('Leave from app.')
@@ -42,14 +51,14 @@ class Window(QMainWindow):
         self.btnStart.clicked.connect(self.startAppTimer)
         self.btnStart.minimumSizeHint()
 
-        self.newWordAction = QAction(QIcon(r"C:\Users\Dmitriy\Desktop\Resouse Images\Word-icon.png"), 'Random word', self)
-        self.newWordAction.setShortcut('Ctrl+R')
-        self.newWordAction.setStatusTip('Get another word for training')
-        self.newWordAction.triggered.connect(self.getNewWord)
+        newWordAction = QAction(QIcon(r"C:\Users\Dmitriy\Desktop\Resouse Images\Word-icon.png"), 'Random word', self)
+        newWordAction.setShortcut('Ctrl+R')
+        newWordAction.setStatusTip('Get another word for training')
+        newWordAction.triggered.connect(self.getNewWord)
 
         self.toolBar = self.addToolBar('Extraction')
-        self.toolBar.addAction(self.newWordAction)
-        self.appMenu.addAction(self.newWordAction)
+        self.toolBar.addAction(newWordAction)
+        self.appMenu.addAction(newWordAction)
 
         # Set up the layout of our app.
         vbox = QVBoxLayout()
@@ -118,3 +127,9 @@ class Window(QMainWindow):
         except Exception as exc:
             print(exc.__str__())
             print(exc.__traceback__)
+
+    def styleChoice(self, text):
+        qApp.setStyle(text)
+
+    def getStyle(self):
+        return self.comboBox.currentIndex()
