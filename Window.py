@@ -54,7 +54,6 @@ class Window(QMainWindow):
         # Set up the layout of our app.
         vbox = QVBoxLayout()
         vbox.addWidget(self.lblWord)
-        #vbox.addWidget(self.lblTime)
         vbox.addWidget(self.pbar)
         vbox.addWidget(self.btnStart)
         self.setLayout(vbox)
